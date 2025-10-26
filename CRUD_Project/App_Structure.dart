@@ -19,68 +19,79 @@ class _App_StructureState extends State<App_Structure> {
     });
   }
 
-  ProductADD({String ? id,String ? name,String ? img,int ? qty,int ? uniPrice,int
-  ? totalPrice, required bool isUpdate}){
-    TextEditingController ProductNameCon = TextEditingController();
-    TextEditingController ProductImgCon = TextEditingController();
-    TextEditingController ProductQtyCon = TextEditingController();
-    TextEditingController ProductUnitPriCon = TextEditingController();
-    TextEditingController ProductTotalPriCon = TextEditingController();
-    showDialog(context: context, builder: (context)=> AlertDialog(
-      title: Text(isUpdate ? 'Update product' : 'Add Product'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: ProductNameCon,
-            decoration: InputDecoration(
-              labelText: 'Product Name'
-            ),
-          ),
-          SizedBox(height: 10,),
-          TextField(
-            controller: ProductImgCon,
-            decoration: InputDecoration(
-                labelText: 'Product Image'
-            ),
-          ),
-          SizedBox(height: 10,),
-          TextField(
-            controller: ProductQtyCon,
-            decoration: InputDecoration(
-                labelText: 'Product Quantity'
-            ),
-          ),
-          SizedBox(height: 10,),
-          TextField(
-            controller: ProductUnitPriCon,
-            decoration: InputDecoration(
-                labelText: 'Product Unit Price'
-            ),
-          ),
-          SizedBox(height: 10,),
-          TextField(
-            controller: ProductTotalPriCon,
-            decoration: InputDecoration(
-                labelText: 'Product Total Price'
-            ),
-          ),
-          SizedBox(height: 10,),
+  ProductADD({
+    String? id,
+    String? name,
+    String? img,
+    int? qty,
+    int? uniPrice,
+    int? totalPrice,
+    required bool isUpdate
+  }) {
+    TextEditingController ProductNameCon = TextEditingController(text: name ?? '');
+    SizedBox(height: 10,);
+    TextEditingController ProductImgCon = TextEditingController(text: img ?? '');
+    SizedBox(height: 10,);
+    TextEditingController ProductQtyCon = TextEditingController(text: qty != null ? qty.toString() : '');
+    TextEditingController ProductUnitPriCon = TextEditingController(text: uniPrice != null ? uniPrice.toString() : '');
+    TextEditingController ProductTotalPriCon = TextEditingController(text: totalPrice != null ? totalPrice.toString() : '');
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextButton(onPressed: (){Navigator.pop(context);},
-                  child: Text('Cancel')),
-              ElevatedButton(onPressed: () async {
-                await ProController.createProduct(ProductNameCon.text, ProductImgCon.text, int.parse(ProductQtyCon.text), int.parse(ProductUnitPriCon.text), int.parse(ProductTotalPriCon.text))
-              }, child: Text('Save'))
-            ],
-          )
-        ],
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(isUpdate ? 'Update Product' : 'Add Product'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(controller: ProductNameCon, decoration: InputDecoration(labelText: 'Product Name')),
+            SizedBox(height: 10),
+            TextField(controller: ProductImgCon, decoration: InputDecoration(labelText: 'Product Image')),
+            SizedBox(height: 10),
+            TextField(controller: ProductQtyCon, decoration: InputDecoration(labelText: 'Product Quantity')),
+            SizedBox(height: 10),
+            TextField(controller: ProductUnitPriCon, decoration: InputDecoration(labelText: 'Product Unit Price')),
+            SizedBox(height: 10),
+            TextField(controller: ProductTotalPriCon, decoration: InputDecoration(labelText: 'Product Total Price')),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (isUpdate) {
+                      await ProController.updateProduct(
+                        id!,
+                        ProductNameCon.text,
+                        ProductImgCon.text,
+                        int.parse(ProductQtyCon.text),
+                        int.parse(ProductUnitPriCon.text),
+                        int.parse(ProductTotalPriCon.text),
+                      );
+                    } else {
+                      await ProController.createProduct(
+                        ProductNameCon.text,
+                        ProductImgCon.text,
+                        int.parse(ProductQtyCon.text),
+                        int.parse(ProductUnitPriCon.text),
+                        int.parse(ProductTotalPriCon.text),
+                      );
+                    }
+
+                    await ProController.Real_View();
+                    setState(() {});
+                    Navigator.pop(context);
+                  },
+                  child: Text(isUpdate ? 'Update' : 'Save'),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
+
   @override
   void initState(){
     super.initState();
@@ -123,6 +134,18 @@ class _App_StructureState extends State<App_Structure> {
                 }
               });
             },
+              onEdit: () {
+                ProductADD(
+                  isUpdate: true,
+                  id: Products.sId,
+                  name: Products.productName,
+                  img: Products.img,
+                  qty: Products.qty,
+                  uniPrice: Products.unitPrice,
+                  totalPrice: Products.totalPrice,
+                );
+              },
+
             );
           }
       ),

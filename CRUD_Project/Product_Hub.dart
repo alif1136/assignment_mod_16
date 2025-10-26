@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class Product_Hub extends StatelessWidget {
   final Data Product;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
   const Product_Hub({
     super.key,
     required this.Product,
-    required this.onDelete
+    required this.onDelete,
+    required this.onEdit
   });
 
   @override
@@ -38,7 +40,7 @@ class Product_Hub extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(onPressed: (){}, icon: Icon(Icons.edit_note,color: Colors.green,)),
+              IconButton(onPressed: onEdit, icon: Icon(Icons.edit_note,color: Colors.green,)),
               IconButton(onPressed: onDelete, icon: Icon(Icons.delete,color: Colors.red,))
             ],
           )

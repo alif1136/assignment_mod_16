@@ -47,6 +47,34 @@ class Product_Controller{
         "TotalPrice": TotalPrice
       }),
     );
+    print(responseuri.statusCode);
+    print(responseuri.body);
+
+    if (responseuri.statusCode == 200) {
+      return true;
+    } else {
+      print('Error: ${responseuri.statusCode}');
+      print('Response body: ${responseuri.body}');
+      return false;
+    }
+  }
+  Future<bool> updateProduct(String ID,String name, String img, int Qty, int UnitPrice, int TotalPrice) async {
+    final responseuri = await http.post(
+      Uri.parse(Urls.updateProduct(ID)),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "ProductName": name,
+        "ProductCode": DateTime.now().microsecondsSinceEpoch,
+        "Img": img,
+        "Qty": Qty,
+        "UnitPrice": UnitPrice,
+        "TotalPrice": TotalPrice
+      }),
+    );
+    print(responseuri.statusCode);
+    print(responseuri.body);
 
     if (responseuri.statusCode == 200) {
       return true;

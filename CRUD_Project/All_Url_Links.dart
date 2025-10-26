@@ -3,4 +3,5 @@ class Urls{
   static String readProduct = '$baseURL/ReadProduct';
   static String createProduct = '$baseURL/createProduct';
   static String deleteProduct(String id) => '$baseURL/deleteProduct/$id';
+  static String updateProduct(String id) => '$baseURL/updateProduct/$id';
 }
