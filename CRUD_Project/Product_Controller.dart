@@ -22,7 +22,7 @@ class Product_Controller{
 
   }
 
-  Future <bool> deleteProduct(String ProductID, String text) async {
+  Future <bool> deleteProduct(String ProductID) async {
     final response = await http.get(Uri.parse(Urls.deleteProduct(ProductID)));
 
     if(response.statusCode == 200){
@@ -32,6 +32,30 @@ class Product_Controller{
       return false;
     }
   }
+  Future<bool> createProduct(String name, String img, int Qty, int UnitPrice, int TotalPrice) async {
+    final responseuri = await http.post(
+      Uri.parse(Urls.createProduct),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "ProductName": name,
+        "ProductCode": DateTime.now().microsecondsSinceEpoch,
+        "Img": img,
+        "Qty": Qty,
+        "UnitPrice": UnitPrice,
+        "TotalPrice": TotalPrice
+      }),
+    );
 
-  static Future<void> dele(String string, String text, String text2, int parse, int parse2, int parse3) async {}
+    if (responseuri.statusCode == 200) {
+      return true;
+    } else {
+      print('Error: ${responseuri.statusCode}');
+      print('Response body: ${responseuri.body}');
+      return false;
+    }
+  }
+
+  
 }

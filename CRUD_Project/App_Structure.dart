@@ -21,88 +21,66 @@ class _App_StructureState extends State<App_Structure> {
 
   ProductADD({String ? id,String ? name,String ? img,int ? qty,int ? uniPrice,int
   ? totalPrice, required bool isUpdate}){
-    TextEditingController productNameController =
-    TextEditingController(text: name);
-    TextEditingController productIMGController =
-    TextEditingController(text: img);
-    TextEditingController productQTYController =
-    TextEditingController(text: qty != null ? qty.toString() : '');
-    TextEditingController productUnitPriceController = TextEditingController(
-        text: uniPrice != null ? uniPrice.toString() : '');
-    TextEditingController productTotalPriceController = TextEditingController(
-        text: totalPrice != null ? totalPrice.toString() : '');
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(isUpdate ? 'Update product' : 'Add product'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: productNameController,
-                decoration: InputDecoration(labelText: 'Product Name'),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: productIMGController,
-                decoration: InputDecoration(labelText: 'Product img'),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: productQTYController,
-                decoration: InputDecoration(labelText: 'Product qty'),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: productUnitPriceController,
-                decoration:
-                InputDecoration(labelText: 'Product unit price'),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: productTotalPriceController,
-                decoration:
-                InputDecoration(labelText: 'Product total price'),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('Cancel')),
-                  ElevatedButton(
-                      onPressed: () async {
-                        if (isUpdate) {
-                          await Product_Controller.dele(
-                              id.toString(),
-                              productNameController.text,
-                              productIMGController.text,
-                              int.parse(productQTYController.text),
-                              int.parse(productUnitPriceController.text),
-                              int.parse(productTotalPriceController.text));
-                        } else {
-                          await ProController.deleteProduct(
-                              productNameController.text,
-                              productIMGController.text,
-                              int.parse(productQTYController.text),
-                              int.parse(productUnitPriceController.text),
-                              int.parse(productTotalPriceController.text));
-                        }
-
-                        await RealData();
-                        Navigator.pop(context);
-                      },
-                      child: Text('Save'))
-                ],
-              )
-            ],
+    TextEditingController ProductNameCon = TextEditingController();
+    TextEditingController ProductImgCon = TextEditingController();
+    TextEditingController ProductQtyCon = TextEditingController();
+    TextEditingController ProductUnitPriCon = TextEditingController();
+    TextEditingController ProductTotalPriCon = TextEditingController();
+    showDialog(context: context, builder: (context)=> AlertDialog(
+      title: Text(isUpdate ? 'Update product' : 'Add Product'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: ProductNameCon,
+            decoration: InputDecoration(
+              labelText: 'Product Name'
+            ),
           ),
-        ));
-  }
+          SizedBox(height: 10,),
+          TextField(
+            controller: ProductImgCon,
+            decoration: InputDecoration(
+                labelText: 'Product Image'
+            ),
+          ),
+          SizedBox(height: 10,),
+          TextField(
+            controller: ProductQtyCon,
+            decoration: InputDecoration(
+                labelText: 'Product Quantity'
+            ),
+          ),
+          SizedBox(height: 10,),
+          TextField(
+            controller: ProductUnitPriCon,
+            decoration: InputDecoration(
+                labelText: 'Product Unit Price'
+            ),
+          ),
+          SizedBox(height: 10,),
+          TextField(
+            controller: ProductTotalPriCon,
+            decoration: InputDecoration(
+                labelText: 'Product Total Price'
+            ),
+          ),
+          SizedBox(height: 10,),
 
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(onPressed: (){Navigator.pop(context);},
+                  child: Text('Cancel')),
+              ElevatedButton(onPressed: () async {
+                await ProController.createProduct(ProductNameCon.text, ProductImgCon.text, int.parse(ProductQtyCon.text), int.parse(ProductUnitPriCon.text), int.parse(ProductTotalPriCon.text))
+              }, child: Text('Save'))
+            ],
+          )
+        ],
+      ),
+    ));
+  }
   @override
   void initState(){
     super.initState();
@@ -148,10 +126,13 @@ class _App_StructureState extends State<App_Structure> {
             );
           }
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: ProductADD(isUpdate: false),
-        child: Icon(Icons.add_circle,),
-      )
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            ProductADD(isUpdate: false);
+          },
+          child: Icon(Icons.add_circle),
+        )
+
     );
   }
 }
